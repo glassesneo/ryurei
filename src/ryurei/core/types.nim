@@ -2,7 +2,7 @@
 {.experimental: "strictDefs".}
 {.experimental: "views".}
 
-import pkg/rulecs
+import std/colors
 import pkg/seiryu
 import pkg/vmath
 
@@ -20,3 +20,7 @@ func init*(
 ): T {.construct.}
 
 func init*(T: type RyureiColor, r, g, b: uint8, a: uint8 = 255): T {.construct.}
+
+func init*(T: type RyureiColor, color: colors.Color): T =
+  let (r, g, b) = color.extractRGB()
+  return RyureiColor.init(r.uint8, g.uint8, b.uint8)
