@@ -9,5 +9,7 @@ import components, systems
 
 plugin GraphicsPlugin:
   world.registerRuntimeSystem(drawPoint)
+  world.registerRuntimeSystem(drawLine)
+  world.registerRuntimeSystem(drawRectangle)
 
 export components

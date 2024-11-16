@@ -20,7 +20,6 @@ type
 
 func init*(T: type Application): T {.construct.} =
   result.world = World.init()
-  result.world.setupSystems()
 
 proc loadPlugin*[T: Plugin](app: var Application, P: type T) =
   P.build(app.world)
@@ -30,6 +29,11 @@ template run*(app: var Application, body: untyped) =
     template world(): World {.used, inject.} =
       app.world
 
+    const passAction = PassAction(
+      colors:
+        [ColorAttachmentAction(loadAction: loadActionClear, clearValue: (0, 0, 0, 1))]
+    )
+
     proc appInit() {.cdecl.} =
       sokol_gfx.setup(
         sokol_gfx.Desc(
@@ -37,21 +41,22 @@ template run*(app: var Application, body: untyped) =
           logger: sokol_gfx.Logger(fn: sokol_log.fn),
         )
       )
-      sokol_gl.setup(sokol_gl.Desc())
+      sokol_gl.setup(sokol_gl.Desc(logger: sokol_gl.Logger(fn: sokol_log.fn)))
       body
+      app.world.setupSystems()
 
     proc appFrame() {.cdecl.} =
       sokol_gl.defaults()
       sokol_gl.matrixModeProjection()
       sokol_gl.ortho(0, sokol_app.width().float, sokol_app.height().float, 0, -1, 1)
       app.world.performRuntimeSystems()
-      sokol_gfx.beginPass(Pass(action: PassAction(), swapchain: sokol_glue.swapchain()))
+      sokol_gfx.beginPass(Pass(action: passAction, swapchain: sokol_glue.swapchain()))
       sokol_gl.draw()
-      sokol_gfx.draw(0, 3, 1)
       sokol_gfx.endPass()
       sokol_gfx.commit()
 
     proc appCleanup() {.cdecl.} =
+      sokol_gl.shutdown()
       sokol_gfx.shutdown()
 
     sokol_app.run(
