@@ -2,6 +2,7 @@
 {.experimental: "strictDefs".}
 {.experimental: "views".}
 
+import std/typetraits
 import pkg/rulecs
 import pkg/seiryu
 import
@@ -10,19 +11,20 @@ import
   pkg/sokol/gfx as sokol_gfx,
   pkg/sokol/glue as sokol_glue,
   pkg/sokol/gl as sokol_gl
+import ./plugin
 
-type
-  Plugin* =
-    concept type P
-        P.build(var World)
-  Application* = object
-    world*: World
+type Application* = object
+  world*: World
 
 func init*(T: type Application): T {.construct.} =
   result.world = World.init()
 
-proc loadPlugin*[T: Plugin](app: var Application, P: type T) =
-  P.build(app.world)
+template loadPlugin*[T: Plugin](app: var Application, P: typedesc[T]) =
+  when P.isAlreadyRegistered():
+    {.warning: "duplicate plugin: " & typetraits.name(`P`).}
+  else:
+    registerPlugin(P)
+    P.build(app.world)
 
 template run*(app: var Application, body: untyped) =
   block:
@@ -72,8 +74,4 @@ template run*(app: var Application, body: untyped) =
       )
     )
 
-template plugin*(name, body: untyped) =
-  type name* = object
-
-  proc build*(P: typedesc[name], world {.inject.}: var World) =
-    body
+export plugin.Plugin, plugin.plugin
