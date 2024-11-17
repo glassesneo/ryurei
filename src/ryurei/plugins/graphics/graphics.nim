@@ -8,8 +8,14 @@ import ../../core/application
 import components, systems
 
 plugin GraphicsPlugin:
-  world.registerRuntimeSystem(drawPoint)
-  world.registerRuntimeSystem(drawLine)
-  world.registerRuntimeSystem(drawRectangle)
+  world.addResource(
+    PassAction(
+      colors:
+        [ColorAttachmentAction(loadAction: loadActionClear, clearValue: (0, 0, 0, 1))]
+    )
+  )
+  world.registerRuntimeSystemsAt(PreDraw, setDefault)
+  world.registerRuntimeSystemsAt(Draw, drawPoint, drawLine, drawRectangle)
+  world.registerRuntimeSystemsAt(PostDraw, mainPass)
 
 export components

@@ -8,6 +8,11 @@ import pkg/vmath
 import ../../core/types
 import components
 
+func setDefault*() {.system.} =
+  sokol_gl.defaults()
+  sokol_gl.matrixModeProjection()
+  sokol_gl.ortho(0, sokol_app.width().float, sokol_app.height().float, 0, -1, 1)
+
 func drawPoint*(pointQuery: [All[Point, Transform2D, RyureiColor]]) {.system.} =
   sokol_gl.beginPoints()
   for id, tf, color in pointQuery of (Transform2D, RyureiColor):
@@ -31,3 +36,9 @@ func drawRectangle*(rectQuery: [All[Rectangle, Transform2D, RyureiColor]]) {.sys
     sokol_gl.v2f(tf.position.x + rect.size.x, tf.position.y + rect.size.y)
     sokol_gl.v2f(tf.position.x, tf.position.y + rect.size.y)
   sokol_gl.end()
+
+func mainPass*(passAction: Resource[PassAction]) {.system.} =
+  sokol_gfx.beginPass(Pass(action: passAction, swapchain: sokol_glue.swapchain()))
+  sokol_gl.draw()
+  sokol_gfx.endPass()
+  sokol_gfx.commit()
