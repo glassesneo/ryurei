@@ -10,7 +10,8 @@ import
   pkg/sokol/log as sokol_log,
   pkg/sokol/gfx as sokol_gfx,
   pkg/sokol/glue as sokol_glue,
-  pkg/sokol/gl as sokol_gl
+  pkg/sokol/gl as sokol_gl,
+  pkg/sokol/time as sokol_time
 import ./plugin
 
 type Application* = object
@@ -32,6 +33,7 @@ template run*(app: var Application, body: untyped) =
       app.world
 
     proc appInit() {.cdecl.} =
+      sokol_time.setup()
       sokol_gfx.setup(
         sokol_gfx.Desc(
           environment: sokol_glue.environment(),
