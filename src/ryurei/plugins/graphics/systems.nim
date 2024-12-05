@@ -15,13 +15,13 @@ func setDefault*() {.system.} =
 
 func drawPoint*(pointQuery: [All[Point, Transform2D, RyureiColor]]) {.system.} =
   sokol_gl.beginPoints()
-  for id, tf, color in pointQuery of (Transform2D, RyureiColor):
+  for entity, tf, color in pointQuery of (Transform2D, RyureiColor):
     sokol_gl.v2fC4b(tf.position.x, tf.position.y, color.r, color.g, color.b, color.a)
   sokol_gl.end()
 
 func drawLine*(lineQuery: [All[Line, Transform2D, RyureiColor]]) {.system.} =
   sokol_gl.beginLines()
-  for id, line, tf, color in lineQuery of (Line, Transform2D, RyureiColor):
+  for entity, line, tf, color in lineQuery of (Line, Transform2D, RyureiColor):
     sokol_gl.c4b(color.r, color.g, color.b, color.a)
     sokol_gl.v2f(tf.position.x, tf.position.y)
     sokol_gl.v2f(tf.position.x + line.size.x, tf.position.y + line.size.y)
@@ -29,7 +29,7 @@ func drawLine*(lineQuery: [All[Line, Transform2D, RyureiColor]]) {.system.} =
 
 func drawRectangle*(rectQuery: [All[Rectangle, Transform2D, RyureiColor]]) {.system.} =
   sokol_gl.beginQuads()
-  for id, rect, tf, color in rectQuery of (Rectangle, Transform2D, RyureiColor):
+  for entity, rect, tf, color in rectQuery of (Rectangle, Transform2D, RyureiColor):
     sokol_gl.c4b(color.r, color.g, color.b, color.a)
     sokol_gl.v2f(tf.position.x, tf.position.y)
     sokol_gl.v2f(tf.position.x + rect.size.x, tf.position.y)

@@ -5,6 +5,6 @@ import resources, systems
 plugin TimePlugin:
   world.addResource(Clock.init(targetFPS = 30))
   world.registerRuntimeSystemsAt(First, countFrame)
-  world.registerRuntimeSystemsAt(Last, manageFrameRate)
+  world.registerRuntimeSystemsAt(PostProcess, manageFrameRate)
 
 export resources

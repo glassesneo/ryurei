@@ -31,7 +31,7 @@ func generateSystem() {.system.} =
 
 func moveSystem(movables: [All[Transform2D, Velocity]], clock: Res[Clock]) {.system.} =
   let frame = clock.averageFrameTime()
-  for id, tf, vel in movables of (ptr Transform2D, Velocity):
+  for entity, tf, vel in movables of (ptr Transform2D, Velocity):
     tf.position.x += vel.x * frame
     tf.position.y += vel.y * frame
 
