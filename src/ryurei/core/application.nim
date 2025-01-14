@@ -12,6 +12,7 @@ import
   pkg/sokol/glue as sokol_glue,
   pkg/sokol/gl as sokol_gl,
   pkg/sokol/time as sokol_time
+import ./builtin
 import ./plugin
 
 type Application* = object
@@ -41,12 +42,16 @@ template run*(app: var Application, body: untyped) =
         )
       )
       sokol_gl.setup(sokol_gl.Desc(logger: sokol_gl.Logger(fn: sokol_log.fn)))
+      app.loadPlugin(BuiltinPlugin)
       body
       app.world.setupSystems()
       app.world.performStartupSystems()
 
     proc appFrame() {.cdecl.} =
       app.world.performRuntimeSystems()
+
+    proc appEvent(event: ptr sokol_app.Event) {.cdecl.} =
+      app.world.readApplicationEvent(event)
 
     proc appCleanup() {.cdecl.} =
       app.world.performTerminateSystems()
@@ -57,6 +62,7 @@ template run*(app: var Application, body: untyped) =
       sokol_app.Desc(
         initCb: appInit,
         frameCb: appFrame,
+        eventCb: appEvent,
         cleanupCb: appCleanup,
         windowTitle: "ryurei",
         width: 400,
@@ -66,4 +72,5 @@ template run*(app: var Application, body: untyped) =
       )
     )
 
+export builtin
 export plugin.Plugin, plugin.plugin
