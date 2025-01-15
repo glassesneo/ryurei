@@ -14,16 +14,16 @@ app.loadPlugin(GraphicsPlugin)
 func setup(clock: Res[ptr Clock]) {.system.} =
   clock[].targetFPS = 60
 
-func generateSystem(keyboardInput: Res[KeyboardInput]) {.system.} =
-  if keyboardInput.heldFrameMap[ord keyCodeSpace] != 1:
+func generateSystem(mouseInput: Res[MouseInput]) {.system.} =
+  if mouseInput.heldFrameMap[ord mouseButtonLeft] != 1:
     return
 
   let entity = control.spawnEntity()
   control.attachComponents(
     entity,
     (
-      Transform2D.init(position = dvec2(1f, 1f)),
-      Velocity(x: rand(0f .. 50f), y: rand(0f .. 50f)),
+      Transform2D.init(position = mouseInput.position),
+      Velocity(x: rand(-50f .. 50f), y: rand(-50f .. 50f)),
       Rectangle.init(size = dvec2(10, 10)),
       RyureiColor.init(rand(255).uint8, rand(255).uint8, rand(255).uint8),
     ),

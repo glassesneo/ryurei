@@ -48,10 +48,24 @@ template run*(app: var Application, body: untyped) =
       app.world.performStartupSystems()
 
     proc appFrame() {.cdecl.} =
-      app.world.performRuntimeSystems()
+      try:
+        app.world.performRuntimeSystems()
+      except:
+        let
+          e = getCurrentException()
+          msg = getCurrentExceptionMsg()
+        debugEcho "Caught exception during game loop: ", repr(e), "with message: ", msg
+        raise e
 
     proc appEvent(event: ptr sokol_app.Event) {.cdecl.} =
-      app.world.readApplicationEvent(event)
+      try:
+        app.world.readApplicationEvent(event)
+      except:
+        let
+          e = getCurrentException()
+          msg = getCurrentExceptionMsg()
+        debugEcho "Caught exception during event loop: ", repr(e), "with message: ", msg
+        raise e
 
     proc appCleanup() {.cdecl.} =
       app.world.performTerminateSystems()
