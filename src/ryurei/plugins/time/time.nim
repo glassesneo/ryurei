@@ -4,7 +4,7 @@ import pkg/rulecs
 import pkg/sokol/app as sokol_app
 import pkg/sokol/time as sokol_time
 import pkg/seiryu
-import ../../core/application
+import ../../core/plugin
 
 type Clock* = object
   targetFPS: Natural

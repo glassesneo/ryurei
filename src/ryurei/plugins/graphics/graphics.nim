@@ -6,7 +6,7 @@ import
 import pkg/rulecs
 import pkg/seiryu
 import pkg/vmath
-import ../../core/application
+import ../../core/plugin
 import ../../core/types
 
 type

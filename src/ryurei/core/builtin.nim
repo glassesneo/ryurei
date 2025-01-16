@@ -1,5 +1,4 @@
 import std/sets
-import std/tables
 import pkg/rulecs
 import pkg/seiryu
 import pkg/seiryu/sugar
@@ -92,7 +91,7 @@ func currentFps*(): float =
 func frameDuration*(): float =
   return sokol_app.frameDuration()
 
-func frameCount*(): uint =
+func frameCount*(): uint64 =
   return sokol_app.frameCount()
 
 plugin BuiltinPlugin:

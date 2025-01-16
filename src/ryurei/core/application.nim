@@ -55,7 +55,6 @@ template run*(app: var Application, body: untyped) =
           e = getCurrentException()
           msg = getCurrentExceptionMsg()
         debugEcho "Caught exception during game loop: ", repr(e), "with message: ", msg
-        raise e
 
     proc appEvent(event: ptr sokol_app.Event) {.cdecl.} =
       try:
@@ -65,7 +64,6 @@ template run*(app: var Application, body: untyped) =
           e = getCurrentException()
           msg = getCurrentExceptionMsg()
         debugEcho "Caught exception during event loop: ", repr(e), "with message: ", msg
-        raise e
 
     proc appCleanup() {.cdecl.} =
       app.world.performTerminateSystems()
@@ -85,6 +83,3 @@ template run*(app: var Application, body: untyped) =
         logger: sokol_app.Logger(fn: sokol_log.fn),
       )
     )
-
-export builtin
-export plugin.Plugin, plugin.plugin
