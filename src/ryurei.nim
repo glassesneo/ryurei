@@ -6,4 +6,5 @@ import ryurei/plugins/time/time
 import ryurei/plugins/graphics/graphics
 
 export rulecs, vmath, application, builtin, plugin, types
+export time, graphics
 export sokol_app.Keycode, sokol_app.Mousebutton
